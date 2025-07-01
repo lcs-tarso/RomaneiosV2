@@ -7,6 +7,6 @@ import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectItem } from "@/components/ui/select";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 
-... (truncated for brevity - real code will be complete here)
+
 
 export default AppRoutes;
