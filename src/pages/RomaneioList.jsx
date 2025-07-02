@@ -15,36 +15,41 @@ export default function RomaneioList() {
     const doc = new jsPDF();
     doc.setFontSize(14);
     doc.text("Romaneio de entrega de notas", 14, 20);
+    doc.setFontSize(10);
+    doc.text(`Centro de Custo: ${romaneio.centroCusto}`, 14, 28);
+    doc.text(`Controle nº ${romaneio.numeroControle}`, 160, 28, { align: 'right' });
 
     const headers = [[
-      "ID", "Emissão", "Nº Nota", "Fornecedor", "Descrição",
+      "Nº Nota", "Emissão", "Emitente", "Descrição",
       "Categoria", "Bruto", "ISS", "INSS", "Descontos",
-      "Líquido", "Vencimento", "Pagamento", "Centro de Custo"
+      "Líquido", "Vencimento", "Pagamento"
     ]];
 
-    const body = [[
-      romaneio.numeroControle,
-      romaneio.dataEmissao,
-      romaneio.numeroNota,
-      romaneio.emitente,
-      romaneio.descricao,
-      romaneio.categoria,
-      `R$ ${romaneio.valorBruto}`,
-      `R$ ${romaneio.iss}`,
-      `R$ ${romaneio.inss}`,
-      `R$ ${(parseFloat(romaneio.pis || 0) + parseFloat(romaneio.cofins || 0) + parseFloat(romaneio.descontoValor || 0)).toFixed(2)}`,
-      `R$ ${romaneio.valorLiquido}`,
-      romaneio.vencimento,
-      romaneio.pagamento,
-      romaneio.centroCusto
-    ]];
+    const body = romaneio.notas.map(nota => [
+      nota.numeroNota,
+      nota.dataEmissao,
+      nota.emitente,
+      nota.descricao,
+      nota.categoria,
+      `R$ ${nota.valorBruto}`,
+      `R$ ${nota.iss}`,
+      `R$ ${nota.inss}`,
+      `R$ ${(
+        (parseFloat(nota.pis) || 0) +
+        (parseFloat(nota.cofins) || 0) +
+        (parseFloat(nota.descontoValor) || 0)
+      ).toFixed(2)}`,
+      `R$ ${nota.valorLiquido}`,
+      nota.vencimento,
+      nota.pagamento
+    ]);
 
     autoTable(doc, {
       head: headers,
       body: body,
-      startY: 30,
+      startY: 36,
       styles: {
-        fontSize: 9,
+        fontSize: 8,
         cellPadding: 2,
       },
       headStyles: {
@@ -72,7 +77,7 @@ export default function RomaneioList() {
         <ul className="space-y-2">
           {romaneios.map((r) => (
             <li key={r.revisaoId} className="border p-4 rounded shadow-sm">
-              <p><strong>#{r.numeroControle}</strong> — {r.emitente} — R$ {r.valorLiquido}</p>
+              <p><strong>#{r.numeroControle}</strong> — {r.centroCusto} — {r.notas.length} nota(s)</p>
               <div className="mt-2 flex gap-4 text-sm">
                 <button onClick={() => exportarPDF(r)} className="text-blue-600 underline">Exportar PDF</button>
                 <button onClick={() => excluirRomaneio(r.revisaoId)} className="text-red-600 underline">Excluir</button>
