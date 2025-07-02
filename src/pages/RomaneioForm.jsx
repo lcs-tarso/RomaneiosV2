@@ -51,7 +51,7 @@ export default function RomaneioForm() {
     const dataStr = now.toLocaleDateString("pt-BR").replaceAll("/", ".");
     const numero = romaneio.numeroControle || (romaneios.length + 1).toString();
     const nomeObra = romaneio.centroCusto?.replace(/\s+/g, "") || "Obra";
-    const nomeArquivo = \`\${numero}_Romaneio de entrega de notas_\${dataStr}_\${nomeObra}\`;
+    const nomeArquivo = `${numero}_Romaneio de entrega de notas_${dataStr}_${nomeObra}`;
 
     const novo = {
       ...romaneio,
