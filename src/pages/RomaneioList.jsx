@@ -57,6 +57,12 @@ export default function RomaneioList() {
     doc.save(`${romaneio.nomeArquivo}.pdf`);
   };
 
+  const excluirRomaneio = (revisaoId) => {
+    const novos = romaneios.filter(r => r.revisaoId !== revisaoId);
+    setRomaneios(novos);
+    localStorage.setItem("romaneios", JSON.stringify([...novos].reverse()));
+  };
+
   return (
     <div className="space-y-4">
       <h1 className="text-xl font-bold">Romaneios Cadastrados</h1>
@@ -67,8 +73,9 @@ export default function RomaneioList() {
           {romaneios.map((r) => (
             <li key={r.revisaoId} className="border p-4 rounded shadow-sm">
               <p><strong>#{r.numeroControle}</strong> — {r.emitente} — R$ {r.valorLiquido}</p>
-              <div className="mt-2 flex gap-2">
-                <button onClick={() => exportarPDF(r)} className="text-sm text-blue-600 underline">Exportar PDF</button>
+              <div className="mt-2 flex gap-4 text-sm">
+                <button onClick={() => exportarPDF(r)} className="text-blue-600 underline">Exportar PDF</button>
+                <button onClick={() => excluirRomaneio(r.revisaoId)} className="text-red-600 underline">Excluir</button>
               </div>
             </li>
           ))}
